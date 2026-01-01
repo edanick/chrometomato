@@ -8,7 +8,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from pathlib import Path
 from enum import Enum
 import yaml, time
-from typing import Union, List, Type
 #endregion
 
 class sm(Enum):
@@ -20,7 +19,7 @@ class sm(Enum):
 
 class Chrome():
 
-    def __init__(self, options: Union[str, List[str]], cookies: str, cookies_domain: str, default_url: str = 'about:blank', driver: Type[webdriver.Chrome] = webdriver.Chrome):
+    def __init__(self, options: str | list[str], cookies: str, cookies_domain: str, default_url: str = 'about:blank', driver: type[webdriver.Chrome] = webdriver.Chrome):
 
         _options = Options()
 
