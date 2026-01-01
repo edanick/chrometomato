@@ -5,12 +5,12 @@ with open('README.md', 'r', encoding='utf8') as f:
 
 setup(
     name="chrometomato",
-    version="1.0.6",
+    version="1.0.7",
     author="Edanick",
     description = "A selenium wrapper with easy use, configuration and shorter code.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    python_requires='>=3.0, <=3.9.25',
+    python_requires='>=3.10',
     install_requires=[
         'selenium',
         'PyYAML'
