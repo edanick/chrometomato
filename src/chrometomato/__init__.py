@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from pathlib import Path
 from enum import Enum
 import yaml, time
+from typing import Union, List, Type
 #endregion
 
 class sm(Enum):
@@ -19,7 +20,7 @@ class sm(Enum):
 
 class Chrome():
 
-    def __init__(self, options: str | list[str], cookies: str, cookies_domain: str, default_url: str = 'about:blank', driver: type[webdriver.Chrome] = webdriver.Chrome):
+    def __init__(self, options: Union[str, List[str]], cookies: str = None, cookies_domain: str = None, default_url: str = 'about:blank', driver: Type[webdriver.Chrome] = webdriver.Chrome):
 
         _options = Options()
 
@@ -35,9 +36,9 @@ class Chrome():
                 raise FileExistsError(f"{options_file.name} doesn't exist")
 
             chrome_args = yaml.safe_load(options_file.read_text())
-            chrome_args['options'].append(f'user-agent={chrome_args["user_agent"]}')
+                
 
-            [_options.add_argument(option) for option in chrome_args['options']]
+            [_options.add_argument(option) for option in (chrome_args['options'] + [f'-user-agent={chrome_args["user_agent"]}'])]
 
 
         self.__prevent_closing = True
@@ -48,9 +49,12 @@ class Chrome():
         self.__driver.get(default_url)
 
         cookies_file = Path(cookies)
-        if cookies_file.exists():
+        if cookies:
 
-            for cookie in cookies_file.read_text().split(';'):
+            if cookies_file.exists():
+                cookies = cookies_file.read_text()
+
+            for cookie in cookies.split(';'):
                 if '=' in cookie:
                     name, value = cookie.strip().split('=', 1)
                     self.__driver.add_cookie({
