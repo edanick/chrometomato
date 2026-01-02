@@ -1,7 +1,7 @@
 # Details
 
 ## Author: Edan
-## Version: 1.0.9
+## Version: 1.1
 
 A selenium wrapper with easy use, configuration and shorter code.
 ---

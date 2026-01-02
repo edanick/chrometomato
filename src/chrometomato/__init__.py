@@ -19,7 +19,7 @@ class sm(Enum):
 
 class Chrome():
 
-    def __init__(self, options: str | list | str, cookies: str = None, cookies_domain: str = None, default_url: str = 'about:blank', driver: Type[webdriver.Chrome] = webdriver.Chrome):
+    def __init__(self, options: str | list[str], cookies: str = None, cookies_domain: str = None, default_url: str = 'about:blank', driver: webdriver.Chrome = webdriver.Chrome):
 
         _options = Options()
 
