@@ -1,7 +1,7 @@
 # Details
 
 ## Author: Edan
-## Version: 1.0.8.1
+## Version: 1.0.9
 
 A selenium wrapper with easy use, configuration and shorter code.
 ---
@@ -200,7 +200,17 @@ print(chrome.title)
 
 ---
 
-## 9. run
+## 9. page_source
+
+> Get the current page source (HTML)
+
+```python
+print(chrome.page_source)
+```
+
+---
+
+## 10. run
 
 > Loop your function until you forcefully exit or call quit
 
@@ -221,7 +231,7 @@ chrome.run(loop, interval=5)
 
 ---
 
-## 10. stays
+## 11. stays
 
 > Prevent chrome from closing (keeps the script running)
 
@@ -231,11 +241,10 @@ chrome.stays()
 
 ---
 
-## 11. quit
+## 12. quit
 
 > Close the web browser and stop the running loop
 
 ```python
 chrome.quit()
 ```
-
