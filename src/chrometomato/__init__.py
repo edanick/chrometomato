@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pathlib import Path
 from enum import Enum
-import yaml, time
+import yaml, time, re
 #endregion
 
 class sm(Enum):
@@ -19,7 +19,7 @@ class sm(Enum):
 
 class Chrome():
 
-    def __init__(self, options: str | list[str], cookies: str = None, cookies_domain: str = None, default_url: str = 'about:blank', driver: webdriver.Chrome = webdriver.Chrome):
+    def __init__(self, options: str | list[str], cookies: str = None, cookies_domain: str = None, driver: webdriver.Chrome = webdriver.Chrome):
 
         _options = Options()
 
@@ -43,27 +43,25 @@ class Chrome():
         self.__prevent_closing = True
         self.__driver = driver(options=_options)
 
-        if default_url != 'about:blank': self.__driver.get('about:blank')
-
-        self.__driver.get(default_url)
-
         cookies_file = Path(cookies)
         if cookies:
 
             if cookies_file.exists():
-                cookies = cookies_file.read_text()
 
-            for cookie in cookies.split(';'):
-                if '=' in cookie:
-                    name, value = cookie.strip().split('=', 1)
-                    self.__driver.add_cookie({
-                        'name': name,
-                        'value': value,
-                        'domain': cookies_domain,
-                        'path': '/'
-                    })
+                self.__driver.execute_cdp_cmd('Network.enable', {})
 
-            self.__driver.refresh()
+                for part in re.sub(r'^[\s"]+|[\s"]+$', '', cookies_file.read_text(encoding='utf8')).split(';'):
+                    if '=' in part:
+                        name, value = part.strip().split('=', 1)
+                        if name and value:
+                            self.__driver.execute_cdp_cmd('Network.setCookie', {
+                                'name': name,
+                                'value': value,
+                                'domain': cookies_domain,
+                                'path': '/'
+                            })
+
+                self.__driver.execute_cdp_cmd('Network.disable', {})
 
     @property
     def title(self) -> str:
@@ -194,4 +192,5 @@ class Chrome():
         '''
         Close the web browser and stops running your loop function
         '''
+        self.__prevent_closing = False
         self.__driver.quit()

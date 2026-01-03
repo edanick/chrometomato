@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding='utf8') as f:
 
 setup(
     name="chrometomato",
-    version="1.1",
+    version="1.2",
     author="Edanick",
     description = "A selenium wrapper with easy use, configuration and shorter code.",
     long_description=long_description,
