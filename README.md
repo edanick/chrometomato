@@ -1,7 +1,7 @@
 # Details
 
 ## Author: Edan
-## Version: 1.1
+## Version: 1.2
 
 A selenium wrapper with easy use, configuration and shorter code.
 ---
@@ -46,7 +46,7 @@ paste your cookies here
 ```python
 from chrometomato import Chrome
 
-chrome = Chrome('chrome_arguments.yaml', 'cookies.txt', 'example.com')
+chrome = Chrome('chrome_arguments.yaml', 'cookies.txt', '.example.com')
 ```
 
 # Functions
@@ -63,7 +63,7 @@ chrome = Chrome('chrome_arguments.yaml', 'cookies.txt', 'example.com')
 The url to navigate to
 
 ```python
-chrome.get('example.com')
+chrome.get('https://example.com')
 ```
 ---
 
