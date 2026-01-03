@@ -19,29 +19,33 @@ class sm(Enum):
 
 class Chrome():
 
-    def __init__(self, options: str | list[str], cookies: str = None, cookies_domain: str = None, driver: webdriver.Chrome = webdriver.Chrome):
+    def __init__(self, options: str | list[str] = None, cookies: str = None, cookies_domain: str | None = None, driver: webdriver.Chrome = webdriver.Chrome):
 
-        _options = Options()
+        if options:
+            _options = Options()
 
-        if isinstance(options, list) and all(type(i) == str for i in options):
-            [_options.add_argument(option) for option in options]
-        else:
-            
-            options_file = Path(options + ('' if options.endswith('.yaml') else '.yaml'))
-
-            if options_file.exists:
-                pass
+            if isinstance(options, list) and all(type(i) == str for i in options):
+                [_options.add_argument(option) for option in options]
             else:
-                raise FileExistsError(f"{options_file.name} doesn't exist")
-
-            chrome_args = yaml.safe_load(options_file.read_text())
                 
+                options_file = Path(options + ('' if options.endswith('.yaml') else '.yaml'))
 
-            [_options.add_argument(option) for option in (chrome_args['options'] + [f'-user-agent={chrome_args["user_agent"]}'])]
+                if options_file.exists:
 
+                    chrome_args = yaml.safe_load(options_file.read_text('utf8')) or {}
+                    
+                    [_options.add_argument(option) for option in (
+                        (chrome_args['options'] if 'options' in chrome_args else []) + \
+                        ([f'-user-agent={chrome_args["user_agent"]}']   if 'user_agent' in chrome_args else [])
+                    )]
+                else:
+                    raise FileExistsError(f"{options_file.name} doesn't exist")
+
+            self.__driver = driver(options=_options)
+        else:
+            self.__driver = driver()
 
         self.__prevent_closing = True
-        self.__driver = driver(options=_options)
 
         cookies_file = Path(cookies)
         if cookies:
@@ -50,7 +54,11 @@ class Chrome():
 
                 self.__driver.execute_cdp_cmd('Network.enable', {})
 
-                for part in re.sub(r'^[\s"]+|[\s"]+$', '', cookies_file.read_text(encoding='utf8')).split(';'):
+                if cookies_domain and cookies_domain.startswith('.'):
+                    cookies_domain = cookies_domain[1:]
+
+                cookie_content = re.sub(r'^[\s"]+|[\s"]+$', '', cookies_file.read_text(encoding='utf8'))
+                for part in cookie_content.split(';'):
                     if '=' in part:
                         name, value = part.strip().split('=', 1)
                         if name and value:
