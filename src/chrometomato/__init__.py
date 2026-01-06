@@ -16,6 +16,7 @@ class sm(Enum):
     NAME = By.NAME
     CSS_SELECTOR = By.CSS_SELECTOR
     XPATH = By.XPATH
+    TAG_NAME = By.TAG_NAME
 
 class Chrome():
 
@@ -36,7 +37,10 @@ class Chrome():
                     
                     [_options.add_argument(option) for option in (
                         (chrome_args['options'] if 'options' in chrome_args else []) + \
-                        ([f'-user-agent={chrome_args["user_agent"]}']   if 'user_agent' in chrome_args else [])
+                        ([f'-user-agent={chrome_args["user-agent"]}'] if 'user-agent' in chrome_args else []) + \
+                        ([f'{("" if driver.__module__ == "selenium.webdriver.chrome.webdriver" else "-")}user-data-dir={chrome_args["user-data-dir"]}'] if 'user-data-dir' in chrome_args else []) + \
+                        ([f'--profile-directory={chrome_args["profile-dir"]}'] if 'profile-dir' in chrome_args else [])
+                        
                     )]
                 else:
                     raise FileExistsError(f"{options_file.name} doesn't exist")

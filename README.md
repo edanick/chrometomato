@@ -1,7 +1,7 @@
 # Details
 
 ## Author: Edan
-## Version: 1.3
+## Version: 1.3.2
 
 A selenium wrapper with easy use, configuration and shorter code.
 ---
@@ -27,8 +27,11 @@ from chrometomato import Chrome
 > this file is to set the browser user agent and launch arguments
 
 ```yaml
-user_agent: >-
+user-agent: >-
     user agent string
+user-data-dir: >-
+    user data dir location
+profile-dir: profile 2
 options:
   - --mute-audio
 ```
